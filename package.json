@@ -1,20 +1,61 @@
 {
-  "name": "codestate-ui",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "@codestate/ui",
+  "version": "1.0.0",
+  "description": "A modern VS Code webview UI for managing development sessions, scripts, and terminal collections",
+  "main": "dist/codesate-ui.iife.js",
+  "style": "dist/codesate-ui.css",
+  "exports": {
+    ".": "./dist/codesate-ui.iife.js",
+    "./css": "./dist/codesate-ui.css",
+    "./style": "./dist/codesate-ui.css"
+  },
+  "files": [
+    "dist/codesate-ui.iife.js",
+    "dist/codesate-ui.css",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
-    "build": "vite build --config vite.config.prod.ts && npm run copy-to-resources",
-    "build:watch": "vite build --config vite.config.prod.ts --watch",
+    "build": "vite build --config vite.config.prod.js",
+    "build:watch": "vite build --config vite.config.prod.js --watch",
     "type-check": "tsc -b",
-    "copy-to-resources": "cp dist/codesate-ui.css ../resources/ && cp dist/codesate-ui.iife.js ../resources/"
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "vscode",
+    "webview",
+    "ui",
+    "design-system",
+    "preact",
+    "typescript",
+    "session-management",
+    "script-management",
+    "terminal",
+    "glassmorphism"
+  ],
+  "author": "CodeState Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codestate/codestate-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codestate/codestate-ui/issues"
+  },
+  "homepage": "https://github.com/codestate/codestate-ui#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "peerDependencies": {
+    "preact": "^10.0.0"
   },
   "dependencies": {
-    "preact": "^10.27.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
+    "preact": "^10.27.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2"
   }

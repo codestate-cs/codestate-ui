@@ -1,9 +1,10 @@
-const { defineConfig } = require('vite')
-const preact = require('@preact/preset-vite')
-
 // Production configuration for IIFE web component
-module.exports = defineConfig({
-  plugins: [preact()],
+module.exports = async () => {
+  const { defineConfig } = await import('vite')
+  const preact = await import('@preact/preset-vite')
+  
+  return defineConfig({
+  plugins: [preact.default()],
   build: {
     outDir: 'dist',
     lib: {
@@ -29,4 +30,5 @@ module.exports = defineConfig({
     // Remove console.log statements in production build
     drop: ['console', 'debugger']
   }
-})
+  })
+}
