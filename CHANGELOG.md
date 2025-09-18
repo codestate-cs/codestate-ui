@@ -11,6 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributing guidelines
 - Open source documentation
 
+## [1.0.2] - 2024-12-19
+
+### Changed
+- **UI Improvements**: Enhanced lifecycle event descriptions in Create Script and Create Terminal Collection dialogs
+- **User Experience**: Added professional, clear descriptions for lifecycle options:
+  - Open: "Automatically executes when VSCode opens a workspace with the matching project root"
+  - None: "Manual execution only - script/terminal collection will not run automatically and must be explicitly added to a session"
+- **Default Behavior**: Changed default lifecycle for terminal collections from 'open' to 'none' for better user control
+
+### Removed
+- **Deprecated Feature**: Hidden "resume" lifecycle option from UI (temporarily disabled pending future implementation)
+
+### Fixed
+- **Accessibility**: Improved lifecycle option presentation with better visual hierarchy and descriptions
+- **Consistency**: Standardized lifecycle option styling across Create Script and Create Terminal Collection dialogs
+
 ## [1.0.0] - 2024-09-15
 
 ### Added

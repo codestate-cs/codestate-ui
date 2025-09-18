@@ -1,6 +1,6 @@
 {
   "name": "@codestate/ui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A modern VS Code webview UI for managing development sessions, scripts, and terminal collections",
   "main": "dist/codesate-ui.iife.js",
   "style": "dist/codesate-ui.css",

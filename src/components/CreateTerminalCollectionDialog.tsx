@@ -35,7 +35,7 @@ export function CreateTerminalCollectionDialog({
   const [formData, setFormData] = useState<CreateTerminalCollectionData>({
     name: '',
     rootPath: rootPath || '',
-    lifecycle: ['open'],
+    lifecycle: ['none'],
     scriptReferences: [],
     closeTerminalAfterExecution: false
   });
@@ -59,7 +59,7 @@ export function CreateTerminalCollectionDialog({
       setFormData({
         name: '',
         rootPath: rootPath || '',
-        lifecycle: ['open'],
+        lifecycle: ['none'],
         scriptReferences: [],
         closeTerminalAfterExecution: false
       });
@@ -192,23 +192,31 @@ export function CreateTerminalCollectionDialog({
 
         <div className="form-group">
           <label>Lifecycle Events</label>
-          <div className="checkbox-group">
-            {['open', 'resume', 'none'].map(event => (
-              <label key={event} className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={formData.lifecycle.includes(event)}
-                  onChange={(e) => {
-                    if (e.currentTarget.checked) {
-                      handleInputChange('lifecycle', [...formData.lifecycle, event]);
-                    } else {
-                      handleInputChange('lifecycle', formData.lifecycle.filter(l => l !== event));
-                    }
-                  }}
-                  className="terminal-checkbox"
-                />
-                <span>{event}</span>
-              </label>
+          <div className="lifecycle-options">
+            {[
+              { value: 'open', label: 'Open', description: 'Automatically executes when VSCode opens a workspace with the matching project root' },
+              { value: 'none', label: 'None', description: 'Manual execution only - terminal collection will not run automatically and must be explicitly added to a session' }
+            ].map(lifecycle => (
+              <div key={lifecycle.value} className="lifecycle-option">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={formData.lifecycle.includes(lifecycle.value)}
+                    onChange={(e) => {
+                      if (e.currentTarget.checked) {
+                        handleInputChange('lifecycle', [...formData.lifecycle, lifecycle.value]);
+                      } else {
+                        handleInputChange('lifecycle', formData.lifecycle.filter(l => l !== lifecycle.value));
+                      }
+                    }}
+                    className="terminal-checkbox"
+                  />
+                  <span>{lifecycle.label}</span>
+                </label>
+                <div className="lifecycle-description">
+                  {lifecycle.description}
+                </div>
+              </div>
             ))}
           </div>
         </div>

@@ -157,8 +157,18 @@
 /* Lifecycle Options */
 .lifecycle-options {
   display: flex;
+  flex-direction: column;
   gap: var(--space-md);
-  flex-wrap: wrap;
+}
+
+.lifecycle-option {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--muted-alpha);
 }
 
 .checkbox-label {
@@ -172,6 +182,13 @@
 .checkbox-label input[type="checkbox"] {
   margin: 0;
   width: auto;
+}
+
+.lifecycle-description {
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  margin-left: calc(var(--space-xs) + 16px); /* Align with checkbox text */
+  line-height: 1.4;
 }
 
 /* Error Message */

@@ -37,7 +37,7 @@ export function CreateScriptDialog({
     name: '',
     rootPath: rootPath,
     commands: [{ command: '', name: '', priority: 1 }],
-    lifecycle: ['open'],
+    lifecycle: ['none'],
     executionMode: 'new-terminals',
     closeTerminalAfterExecution: false
   });
@@ -57,7 +57,7 @@ export function CreateScriptDialog({
         commands: editScript.commands && editScript.commands.length > 0 
           ? editScript.commands 
           : [{ command: '', name: '', priority: 1 }],
-        lifecycle: editScript.lifecycle || ['open'],
+        lifecycle: editScript.lifecycle || ['none'],
         executionMode: editScript.executionMode || 'new-terminals',
         closeTerminalAfterExecution: editScript.closeTerminalAfterExecution || false
       });
@@ -67,7 +67,7 @@ export function CreateScriptDialog({
         name: '',
         rootPath: rootPath,
         commands: [{ command: '', name: '', priority: 1 }],
-        lifecycle: ['open'],
+        lifecycle: ['none'],
         executionMode: 'new-terminals',
         closeTerminalAfterExecution: false
       });
@@ -138,7 +138,7 @@ export function CreateScriptDialog({
       name: '',
       rootPath: rootPath,
       commands: [{ command: '', name: '', priority: 1 }],
-      lifecycle: ['open'],
+      lifecycle: ['none'],
       executionMode: 'same-terminal',
       closeTerminalAfterExecution: false
     });
@@ -263,16 +263,24 @@ export function CreateScriptDialog({
             <div className="form-group">
               <label>Lifecycle Events</label>
               <div className="lifecycle-options">
-                {['open', 'resume', 'none'].map(lifecycle => (
-                  <label key={lifecycle} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={formData.lifecycle.includes(lifecycle)}
-                      onChange={() => toggleLifecycle(lifecycle)}
-                      disabled={isCreating}
-                    />
-                    {lifecycle.charAt(0).toUpperCase() + lifecycle.slice(1)}
-                  </label>
+                {[
+                  { value: 'open', label: 'Open', description: 'Automatically executes when VSCode opens a workspace with the matching project root' },
+                  { value: 'none', label: 'None', description: 'Manual execution only - script will not run automatically and must be explicitly added to a session' }
+                ].map(lifecycle => (
+                  <div key={lifecycle.value} className="lifecycle-option">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={formData.lifecycle.includes(lifecycle.value)}
+                        onChange={() => toggleLifecycle(lifecycle.value)}
+                        disabled={isCreating}
+                      />
+                      {lifecycle.label}
+                    </label>
+                    <div className="lifecycle-description">
+                      {lifecycle.description}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
