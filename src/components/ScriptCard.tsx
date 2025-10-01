@@ -9,7 +9,17 @@ interface ScriptCardProps {
 
 export function ScriptCard({ script, isNewlyCreated = false }: ScriptCardProps) {
   const getExecutionMode = (): string => {
-    return script.executionMode || 'same-terminal';
+    const mode = script.executionMode || 'ide';
+    switch (mode) {
+      case 'ide':
+        return 'IDE';
+      case 'same-terminal':
+        return 'Same Terminal';
+      case 'multi-terminal':
+        return 'Multi Terminal';
+      default:
+        return 'IDE';
+    }
   };
 
   return (

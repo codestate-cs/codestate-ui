@@ -61,6 +61,12 @@ export const useCodeStateStore = () => {
     currentProjectRoot: configStore.currentProjectRoot,
     configDialog: configStore.configDialog,
 
+    // OS Info data
+    osInfo: configStore.osInfo,
+    osInfoLoading: configStore.osInfoLoading,
+    osInfoError: configStore.osInfoError,
+    osInfoLoaded: configStore.osInfoLoaded,
+
     // Session actions
     setSessions: sessionStore.setSessions,
     addSession: sessionStore.addSession,
@@ -133,6 +139,13 @@ export const useCodeStateStore = () => {
     closeConfigDialog: configStore.closeConfigDialog,
     setConfigData: configStore.setConfigData,
     setConfigDataError: configStore.setConfigDataError,
+
+    // OS Info actions
+    setOSInfo: configStore.setOSInfo,
+    setOSInfoLoading: configStore.setOSInfoLoading,
+    setOSInfoError: configStore.setOSInfoError,
+    setOSInfoLoaded: configStore.setOSInfoLoaded,
+    resetOSInfo: configStore.resetOSInfo,
 
     // Combined actions
     closeAllDialogs: () => {

@@ -1,6 +1,14 @@
 // Base interface for all data providers
 // Data provider interface for VS Code integration
 
+export interface OSInfo {
+  platform: string;
+  isLinux: boolean;
+  isMacOS: boolean;
+  isWindows: boolean;
+  supportsTerminalTabs: boolean;
+}
+
 export interface DataProvider {
   // Data initialization (no returns expected)
   initializeSessions(): void;

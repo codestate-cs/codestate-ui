@@ -34,7 +34,7 @@ export const TerminalCollectionList = memo(function TerminalCollectionList({
     const scriptIds = scriptsArray.map(ref => ref.id);
     const scriptData = scripts.filter(script => scriptIds.includes(script.id));
     const scriptNames = scriptData
-      .map(script => <><b>{script.name}</b>: {script?.commands?.map((c: any) => <><br />{c.command}</>)}</>)
+      .map(script => <><b>{script.name}</b>: {script?.commands?.map((c: any) => <><br />{c.command}</>)}<br /></>)
       .filter(Boolean);
     return scriptNames;
   };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Dialog } from './Dialog';
 import { Accordion } from './Accordion';
-import { useScriptStore, useTerminalCollectionStore } from '../store/combinedStore';
+import { useScriptStore, useTerminalCollectionStore, useConfigStore } from '../store/combinedStore';
 import type { TerminalCollectionWithScripts, Script } from '../types/session';
 import type { DataProvider } from '../providers/DataProvider';
 import './CreateTerminalCollectionDialog.css';
@@ -12,6 +12,7 @@ interface CreateTerminalCollectionData {
   lifecycle: string[];
   scriptReferences: { id: string; rootPath: string }[];
   closeTerminalAfterExecution: boolean;
+  executionMode: 'ide' | 'same-terminal' | 'multi-terminal';
 }
 
 interface CreateTerminalCollectionDialogProps {
@@ -31,13 +32,63 @@ export function CreateTerminalCollectionDialog({
 }: CreateTerminalCollectionDialogProps) {
   const { scripts } = useScriptStore();
   const { setCurrentTerminalCollection, setTempTerminalCollectionData } = useTerminalCollectionStore();
+  const { osInfo } = useConfigStore();
+
+  console.log('CreateTerminalCollectionDialog: Current osInfo:', osInfo);
+
+  // Get available execution modes based on OS
+  const getAvailableExecutionModes = () => {
+    if (!osInfo) {
+      return [];
+    }
+    
+    const availableModes = [];
+    
+    // Always show IDE option
+    availableModes.push({
+      value: 'ide',
+      label: 'IDE',
+      description: 'Execute scripts in the integrated terminal within the IDE'
+    });
+    
+    // Show same-terminal based on OS
+    if (osInfo.isMacOS) {
+      // macOS always supports terminal tabs
+      availableModes.push({
+        value: 'same-terminal',
+        label: 'Same Terminal',
+        description: 'Execute scripts in an external Terminal app with tabs for each script'
+      });
+    } else if (osInfo.isLinux || osInfo.isWindows) {
+      // Linux/Windows only if terminal tabs are supported
+      if (osInfo.supportsTerminalTabs) {
+        availableModes.push({
+          value: 'same-terminal',
+          label: 'Same Terminal',
+          description: 'Execute scripts in an external Terminal app with tabs for each script'
+        });
+      }
+    }
+    
+    // Always show multi-terminal
+    availableModes.push({
+      value: 'multi-terminal',
+      label: 'Multi Terminal',
+      description: 'Execute each script in a separate Terminal app instance'
+    });
+    
+    return availableModes;
+  };
+
+  const availableExecutionModes = getAvailableExecutionModes();
   
   const [formData, setFormData] = useState<CreateTerminalCollectionData>({
     name: '',
     rootPath: rootPath || '',
     lifecycle: ['none'],
     scriptReferences: [],
-    closeTerminalAfterExecution: false
+    closeTerminalAfterExecution: false,
+    executionMode: 'ide'
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +103,8 @@ export function CreateTerminalCollectionDialog({
           id: script.id,
           rootPath: script.rootPath
         })),
-        closeTerminalAfterExecution: editTerminalCollection.closeTerminalAfterExecution || false
+        closeTerminalAfterExecution: editTerminalCollection.closeTerminalAfterExecution || false,
+        executionMode: editTerminalCollection.executionMode || 'ide'
       });
     } else {
       // Reset form for creation
@@ -61,7 +113,8 @@ export function CreateTerminalCollectionDialog({
         rootPath: rootPath || '',
         lifecycle: ['none'],
         scriptReferences: [],
-        closeTerminalAfterExecution: false
+        closeTerminalAfterExecution: false,
+        executionMode: 'ide'
       });
     }
   }, [editTerminalCollection, rootPath]);
@@ -113,7 +166,8 @@ export function CreateTerminalCollectionDialog({
         rootPath: formData.rootPath,
         lifecycle: formData.lifecycle as ('open' | 'resume' | 'none')[],
         scriptReferences: formData.scriptReferences,
-        closeTerminalAfterExecution: formData.closeTerminalAfterExecution
+        closeTerminalAfterExecution: formData.closeTerminalAfterExecution,
+        executionMode: formData.executionMode
       };
       console.log('CreateTerminalCollectionDialog: Setting current terminal collection to:', updatedTerminalCollection);
       setCurrentTerminalCollection(updatedTerminalCollection);
@@ -131,6 +185,7 @@ export function CreateTerminalCollectionDialog({
         lifecycle: formData.lifecycle as ('open' | 'resume' | 'none')[],
         scriptReferences: formData.scriptReferences,
         closeTerminalAfterExecution: formData.closeTerminalAfterExecution,
+        executionMode: formData.executionMode,
         scripts: [] // Will be populated from scriptReferences
       };
       
@@ -159,11 +214,12 @@ export function CreateTerminalCollectionDialog({
       title={editTerminalCollection ? 'Edit Terminal Collection' : 'Create Terminal Collection'}
     >
       <form onSubmit={handleSubmit} className="create-terminal-collection-form">
-        {error && (
-          <div className="error-message" style={{ color: 'red', marginBottom: '1rem', padding: '0.5rem', backgroundColor: '#ffe6e6', border: '1px solid #ff9999', borderRadius: '4px' }}>
-            {error}
-          </div>
-        )}
+        <div className="form-content">
+          {error && (
+            <div className="error-message" style={{ color: 'red', marginBottom: '1rem', padding: '0.5rem', backgroundColor: '#ffe6e6', border: '1px solid #ff9999', borderRadius: '4px' }}>
+              {error}
+            </div>
+          )}
         <div className="form-group">
           <label htmlFor="name">Name</label>
           <input
@@ -222,6 +278,33 @@ export function CreateTerminalCollectionDialog({
         </div>
 
         <div className="form-group">
+          <label>Execution Mode</label>
+          <div className="execution-mode-options">
+            {!osInfo ? (
+              <p>Loading OS information...</p>
+            ) : (
+              availableExecutionModes.map(mode => (
+                <div key={mode.value} className="execution-mode-option">
+                  <label className="radio-label">
+                    <input
+                      type="radio"
+                      name="executionMode"
+                      value={mode.value}
+                      checked={formData.executionMode === mode.value}
+                      onChange={(e) => handleInputChange('executionMode', (e.target as HTMLInputElement).value)}
+                    />
+                    {mode.label}
+                  </label>
+                  <div className="execution-mode-description">
+                    {mode.description}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className="form-group">
           <label>Script References</label>
           <div className="script-selection">
             {groupEntries.length === 0 ? (
@@ -273,6 +356,7 @@ export function CreateTerminalCollectionDialog({
             />
             <span>Close terminal after execution</span>
           </label>
+        </div>
         </div>
 
         <div className="form-actions">

@@ -61,6 +61,7 @@ export interface TerminalCollectionWithScripts {
   scripts: Script[];
   scriptReferences: { id: string, rootPath: string }[];
   closeTerminalAfterExecution?: boolean;
+  executionMode?: "ide" | "same-terminal" | "multi-terminal";
 }
 
 export interface Script {

@@ -11,6 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributing guidelines
 - Open source documentation
 
+## [1.0.3] - 2024-12-19
+
+### Changed
+- **Architecture**: Consolidated OS info handling into config initialization flow
+- **Message Flow**: OS info is now received as part of `codestate.config.init.response` instead of separate `codestate.os.info.init.response`
+- **State Management**: Moved OS info state from separate `osInfoStore` to `configStore` for better organization
+
+### Removed
+- **Deprecated API**: Removed `codestate.os.info.init` message and `codestate.os.info.init.response` handler
+- **Unused Code**: Removed `OSInfoManager` and `osInfoStore` files
+- **Interface Cleanup**: Removed OS info methods from `DataProvider` interface
+
+### Fixed
+- **Build Issues**: Resolved build failures caused by references to removed OS info store
+- **Message Structure**: Fixed inconsistent message handling patterns between working and problematic responses
+- **Code Organization**: Improved code structure by consolidating related functionality
+
 ## [1.0.2] - 2024-12-19
 
 ### Changed
